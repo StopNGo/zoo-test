@@ -12,7 +12,7 @@
     </form>
 @endauth
 
-<h3>Всі повідомлення</h3>
+<h3> Ваші повідомлення</h3>
 @foreach ($messages as $message)
     <div class="message">
         <strong>{{ $message->created_at }}:</strong>

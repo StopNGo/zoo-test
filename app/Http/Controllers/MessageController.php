@@ -3,13 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
     public function index()
     {
-        $messages = Message::with('user')->orderBy('created_at', 'desc')->get();
+        if (!Auth::check()) {
+            return view('index');
+        }
+
+        $messages = Message::with('user')
+            ->where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('messages.index', compact('messages'));
     }
 

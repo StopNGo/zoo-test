@@ -17,10 +17,15 @@
         @guest
             <a href="{{ route('login') }}">Вхід</a>
         @else
-            <a href="#" onclick="document.getElementById('logout-form').submit()">Вихід</a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
-                @csrf
-            </form>
+            <a href="{{ route('logout') }}" data-csrf="{{ csrf_token() }}" onclick="event.preventDefault(); 
+                                fetch('{{ route('logout') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': this.dataset.csrf
+                                    }
+                                }).then(() => window.location.reload());">
+                Вихід
+            </a>
         @endguest
     </div>
     @yield('content')
