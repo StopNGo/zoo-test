@@ -3,16 +3,27 @@
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\LoginController;
 
-Route::get('/', [MessageController::class, 'index'])->name('home');
+Route::get('/', [MessageController::class, 'messages'])->name('home');
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/send-sms', [LoginController::class, 'sendSms']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::group([
+    'controller' => LoginController::class,
+    'as' => 'auth.'
+], function () {
+    Route::get('/login', 'showLoginForm')->name('login');
+    Route::post('/login', 'login')->name('login.submit');
+    Route::get('/send-sms', fn() => redirect()->route('home'));
+    Route::post('/send-sms', 'sendSms')->name('sms.send');
+    Route::get('/logout', 'logout')->name('logout');
+});
 
-Route::middleware('auth')->group(function () {
-    Route::post('/messages', [MessageController::class, 'store']);
-    Route::put('/messages/{message}', [MessageController::class, 'update']);
-    Route::delete('/messages/{message}', [MessageController::class, 'destroy']);
+Route::group([
+    'controller' => MessageController::class,
+    'prefix' => '/messages',
+    'as' => 'messages.'
+], function () {
+    Route::get('/', fn() => redirect()->route('home'))->name('index');
+    Route::post('/', 'store')->name('store');
+    Route::post('/{message}/edit', 'update')->name('update');
+    Route::post('/{message}/delete', 'destroy')->name('delete');
 });
 

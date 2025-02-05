@@ -15,17 +15,9 @@
 
         <a href="{{ route('home') }}">Головна</a>
         @guest
-            <a href="{{ route('login') }}">Вхід</a>
+            <a href="{{ route('auth.login') }}">Вхід</a>
         @else
-            <a href="{{ route('logout') }}" data-csrf="{{ csrf_token() }}" onclick="event.preventDefault(); 
-                                fetch('{{ route('logout') }}', {
-                                    method: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': this.dataset.csrf
-                                    }
-                                }).then(() => window.location.reload());">
-                Вихід
-            </a>
+            <a href="{{ route('auth.logout') }}">Вихід</a>
         @endguest
     </div>
     @yield('content')

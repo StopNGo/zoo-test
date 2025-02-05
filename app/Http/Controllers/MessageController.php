@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
-    public function index()
+    public function messages()
     {
         if (!Auth::check()) {
             return view('index');
@@ -24,6 +24,10 @@ class MessageController extends Controller
 
     public function store(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('home');
+        }
+
         $request->validate([
             'content' => 'required'
         ]);
@@ -38,6 +42,10 @@ class MessageController extends Controller
 
     public function update(Request $request, Message $message)
     {
+        if (!Auth::check()) {
+            return redirect()->route('home');
+        }
+
         $request->validate([
             'content' => 'required'
         ]);
@@ -55,6 +63,10 @@ class MessageController extends Controller
 
     public function destroy(Message $message)
     {
+        if (!Auth::check()) {
+            return redirect()->route('home');
+        }
+
         if ($message->user_id !== auth()->id()) {
             abort(403);
         }
